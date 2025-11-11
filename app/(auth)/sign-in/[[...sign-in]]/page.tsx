@@ -1,10 +1,13 @@
-import React from 'react';
-import { SignIn } from '@clerk/nextjs';
+import { SignIn } from '@clerk/nextjs'
 
-function SignInPage() {
+export default function SignInPage() {
     return (
-        <div><SignIn /></div>
+        <div className="flex min-h-screen items-center justify-center bg-gray-50">
+            <SignIn
+                fallbackRedirectUrl="/dashboard"
+                forceRedirectUrl="/dashboard"
+                signUpUrl="/sign-up"
+            />
+        </div>
     )
 }
-
-export default SignInPage
