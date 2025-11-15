@@ -1,12 +1,15 @@
-"use client";
+'use client'
 import { useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useState } from "react";
+import { auth } from '@clerk/nextjs/server';
+import { redirect } from "next/navigation";
 
 function DasboardPage() {
     const testGenerate = useAction(api.generate.testGenerate);
     const [result, setResult] = useState<string>("");
     const [loading, setLoading] = useState(false);
+
 
     const apiHandler = async () => {
         setLoading(true);

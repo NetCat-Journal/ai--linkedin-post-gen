@@ -10,6 +10,7 @@
 
 import type * as generate from "../generate.js";
 import type * as profiles from "../profiles.js";
+import type * as usage from "../usage.js";
 
 import type {
   ApiFromModules,
@@ -28,6 +29,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   generate: typeof generate;
   profiles: typeof profiles;
+  usage: typeof usage;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 
