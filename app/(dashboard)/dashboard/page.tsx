@@ -2,8 +2,7 @@
 import { useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useState } from "react";
-import { auth } from '@clerk/nextjs/server';
-import { redirect } from "next/navigation";
+import Navbar from "@/app/components/navbar";
 
 function DasboardPage() {
     const testGenerate = useAction(api.generate.testGenerate);
@@ -32,7 +31,8 @@ function DasboardPage() {
         }
     }
     return (
-        <>
+        <div >
+            <Navbar />
             <div><button onClick={apiHandler} disabled={loading}>call openai</button></div>
             {result && (
                 <div>
@@ -40,7 +40,7 @@ function DasboardPage() {
                     <p>{result}</p>
                 </div>
             )}
-        </>
+        </div>
     )
 }
 
