@@ -5,7 +5,7 @@ export const check = query({
     args: {},
     handler: async (ctx) => {
         const identity = await ctx.auth.getUserIdentity();
-        if (!identity) throw new Error("User not authenticated");
+        if (!identity) return null;
 
         const now = new Date();
         const monthKey = `${now.getFullYear()}-${now.getMonth() + 1}`;

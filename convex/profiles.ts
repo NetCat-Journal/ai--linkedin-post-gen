@@ -7,7 +7,7 @@ export const getOrCreate = mutation({
         // getting user from clerk auth
         const identity = await ctx.auth.getUserIdentity();
         if (!identity) {
-            throw new Error("User not authenticated");
+            return null;
         }
         console.log("User identity:", identity);
 
@@ -17,17 +17,17 @@ export const getOrCreate = mutation({
         const existingProfiles = await ctx.db
             .query("profiles")
             .withIndex("by_user", (q) => q.eq("userId", userId))
-            .collect();
+            .first();
 
         if (existingProfiles) {
-            console.log("Existing profile found:", existingProfiles[0]);
-            return existingProfiles[0];
+            console.log("Existing profile found:", existingProfiles);
+            return existingProfiles;
         }
 
         // If not, create a new profile
         const profileId = await ctx.db.insert("profiles", {
             userId: userId,
-            name: identity.name ?? identity.email ?? "User",
+            name: identity.name || identity.email || "User",
             subscriptionTier: "free",
             subscriptionStatus: "active",
             createdAt: Date.now(),
@@ -51,10 +51,11 @@ export const get = query({
         const existingProfiles = await ctx.db
             .query("profiles")
             .withIndex("by_user", (q) => q.eq("userId", userId))
-            .collect();
+            .first();
 
         if (existingProfiles) {
-            return existingProfiles[0] ?? null
+            console.log("Existing profile found:", existingProfiles);
+            return existingProfiles;
         }
 
     }

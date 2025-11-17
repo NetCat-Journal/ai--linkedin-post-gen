@@ -3,6 +3,7 @@ import { useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useState } from "react";
 import Navbar from "@/app/components/navbar";
+import Usage from "@/app/components/usage";
 
 function DasboardPage() {
     const testGenerate = useAction(api.generate.testGenerate);
@@ -33,6 +34,7 @@ function DasboardPage() {
     return (
         <div >
             <Navbar />
+            <Usage />
             <div><button onClick={apiHandler} disabled={loading}>call openai</button></div>
             {result && (
                 <div>
