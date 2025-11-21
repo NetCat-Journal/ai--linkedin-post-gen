@@ -5,23 +5,29 @@ import { useState } from "react";
 
 function Posts() {
     const testGenerate = useAction(api.generate.testGenerate);
-    const [result, setResult] = useState<string>("");
+    const generatePosts = useAction(api.generate.generatePosts);
+    const [result, setResult] = useState<[]>([]);
     const [loading, setLoading] = useState(false);
     const [prompt, setPrompt] = useState<string>("");
+    const [error, setError] = useState<string>("");
+
 
     const handlePrompt = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPrompt(e.target.value);
     }
+
     const apiHandler = async () => {
         setLoading(true);
-        setResult("");
+        setResult([]);
+        setError("")
         try {
-            const res = await testGenerate({ prompt: prompt });
-            if (res.sucess) {
-                setResult(res.content || "No content generated");
+            const res = await generatePosts({ tone: "profesional", idea: prompt });
+            console.log("API response:", res);
+            if (res.success) {
+                setResult(res.posts);
                 console.log("Tokens used:", res.tokensUsed);
             } else {
-                setResult(`Error: ${res.content}`);
+                setError(`Error: ${res.error}`);
             }
 
         }
