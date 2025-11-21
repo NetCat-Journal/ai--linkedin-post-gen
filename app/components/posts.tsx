@@ -6,7 +6,7 @@ import { useState } from "react";
 function Posts() {
     const testGenerate = useAction(api.generate.testGenerate);
     const generatePosts = useAction(api.generate.generatePosts);
-    const [result, setResult] = useState<[]>([]);
+    const [result, setResult] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const [prompt, setPrompt] = useState<string>("");
     const [error, setError] = useState<string>("");
@@ -21,7 +21,7 @@ function Posts() {
         setResult([]);
         setError("")
         try {
-            const res = await generatePosts({ tone: "profesional", idea: prompt });
+            const res = await generatePosts({ tone: "professional", idea: prompt });
             console.log("API response:", res);
             if (res.success) {
                 setResult(res.posts);
@@ -46,7 +46,12 @@ function Posts() {
             {result && (
                 <div>
                     <h2>Generated Content:</h2>
-                    <p>{result}</p>
+                    {result.map((post, index) => (
+                        <div key={index} className="border border-gray-300 p-4 my-2">
+                            <p>{post}</p>
+                        </div>
+                    ))}
+
                 </div>
             )}
         </>
