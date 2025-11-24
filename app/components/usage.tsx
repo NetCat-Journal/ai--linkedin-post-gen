@@ -42,10 +42,10 @@ function Usage() {
     console.log("==================");
 
     return (
-        <div className="flex flex-col justify-center items-center mt-8 ">
-            <div className="p-8 space-y-4">
+        <div className="flex flex-col justify-center items-center mt-8  w-full p-4">
+            <div className="w-full p-8 space-y-4 border border-gray-200 rounded-sm backdrop-blur-2xl shadow-gray-50">
                 <div>
-                    <h2>User: {profile?.name}</h2>
+                    <h2>{profile?.name}</h2>
                 </div>
                 <div className="space-y-2">
                     <h2>Usage: {usage?.count}</h2>

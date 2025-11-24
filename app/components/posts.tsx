@@ -2,6 +2,7 @@
 import { useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useState } from "react";
+import { Spinner } from "@/components/ui/spinner";
 
 function Posts() {
     const testGenerate = useAction(api.generate.testGenerate);
@@ -41,17 +42,20 @@ function Posts() {
     return (
         <>
             <div className="p-4 flex flex-row justify-between items-center">
-                <input onChange={handlePrompt} type="text" placeholder="Enter your idea" className="border border-gray-300 p-2 mr-2 flex-1" />
-                <button onClick={apiHandler} disabled={loading} className="bg-[#0A66C2] py-2 px-4 cursor-pointer text-white">Create Posts</button></div>
+                <input onChange={handlePrompt} type="text" placeholder="Enter your idea ..." className="rounded-sm border border-gray-200 p-2 mr-2 flex-1" />
+                <button onClick={apiHandler} disabled={loading} className="rounded-sm px-4 py-2 bg-[#0A66C2] border-2 border-transparent text-white hover:bg-[#0a66c2ed]">Create Posts</button></div>
             {result && (
-                <div>
-                    <h2>Generated Content:</h2>
-                    {result.map((post, index) => (
-                        <div key={index} className="border border-gray-300 p-4 my-2">
-                            <p>{post}</p>
+                <div className="p-4">
+                    <div className="flex justify-center items-center">
+                        {loading && <Spinner className="w-20 h-20 text-[#0A66C2]" />}
+                        <div className="grid grid-rows-3 gap-4 md:grid md:grid-cols-3 ">
+                            {result.map((post, index) => (
+                                <div key={index} className="rounded-sm border border-gray-200 p-8">
+                                    <p>{post}</p>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-
+                    </div>
                 </div>
             )}
         </>
