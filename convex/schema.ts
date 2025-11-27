@@ -8,6 +8,7 @@ export default defineSchema({
         subscriptionTier: v.string(),   //free, pro, enterprise
         subscriptionStatus: v.string(), //active,inactive,canceled
         stripeCustomerId: v.optional(v.string()),
+        stripeSubscriptionId: v.optional(v.string()),
         createdAt: v.number(),
         updatedAt: v.number(),
     })

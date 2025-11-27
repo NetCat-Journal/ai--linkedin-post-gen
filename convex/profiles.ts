@@ -60,3 +60,32 @@ export const get = query({
 
     }
 })
+
+
+export const updateStripeCustomer = mutation({
+    args: { customerId: v.string() },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("User not authenticated");
+        }
+        const userId = identity.subject;
+
+        const existingProfile = await ctx.db
+            .query("profiles")
+            .withIndex("by_user", (q) => q.eq("userId", userId))
+            .first();
+
+        if (!existingProfile) {
+            throw new Error("Profile not found");
+        }
+
+        await ctx.db.patch(existingProfile._id, {
+            stripeCustomerId: args.customerId,
+            updatedAt: Date.now(),
+        });
+
+        const updatedProfile = await ctx.db.get(existingProfile._id);
+        return updatedProfile;
+    }
+})

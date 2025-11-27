@@ -11,6 +11,7 @@
 import type * as generate from "../generate.js";
 import type * as posts from "../posts.js";
 import type * as profiles from "../profiles.js";
+import type * as stripe from "../stripe.js";
 import type * as usage from "../usage.js";
 
 import type {
@@ -31,6 +32,7 @@ declare const fullApi: ApiFromModules<{
   generate: typeof generate;
   posts: typeof posts;
   profiles: typeof profiles;
+  stripe: typeof stripe;
   usage: typeof usage;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
