@@ -68,15 +68,13 @@ export const generatePosts = action({
             console.log("Current usage:", usage);
 
             // Step 3: Calculate limit
-            const limit =
-                profile.subscriptionTier === "enterprise" ? 100 :
-                    profile.subscriptionTier === "pro" ? 50 :
-                        5;
+            const limit = profile.subscriptionTier === "free" ? 5 : Infinity;
 
-            // Step 4: Check usage limit
-            if (usage && usage.count >= limit) {
-                throw new Error(`Monthly limit reached (${limit} posts). Please upgrade.`);
+            // Step 4: Check usage limit (only for free users)
+            if (profile.subscriptionTier === "free" && usage && usage.count >= limit) {
+                throw new Error(`Monthly limit reached (${limit} posts). Upgrade to Pro for unlimited posts!`);
             }
+
 
             // Step 5: Build tone-specific prompt
             const tonePrompts = {

@@ -89,3 +89,73 @@ export const updateStripeCustomer = mutation({
         return updatedProfile;
     }
 })
+
+
+//for webhook
+
+export const updateSubscription = mutation({
+    args: {
+        userId: v.string(),
+        subscriptionTier: v.string(),
+        subscriptionStatus: v.string(),
+        stripeCustomerId: v.string(),
+        stripeSubscriptionId: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const profile = await ctx.db
+            .query("profiles")
+            .withIndex("by_user", (q) => q.eq("userId", args.userId))
+            .first();
+
+        if (!profile) {
+            // Create profile if doesn't exist
+            await ctx.db.insert("profiles", {
+                userId: args.userId,
+                subscriptionTier: args.subscriptionTier,
+                subscriptionStatus: args.subscriptionStatus,
+                stripeCustomerId: args.stripeCustomerId,
+                stripeSubscriptionId: args.stripeSubscriptionId,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+            });
+        } else {
+            // Update existing profile
+            await ctx.db.patch(profile._id, {
+                subscriptionTier: args.subscriptionTier,
+                subscriptionStatus: args.subscriptionStatus,
+                stripeCustomerId: args.stripeCustomerId,
+                stripeSubscriptionId: args.stripeSubscriptionId,
+                updatedAt: Date.now(),
+            });
+        }
+
+        return { success: true };
+    },
+});
+
+export const downgradeByCustomerId = mutation({
+    args: {
+        customerId: v.string(),
+        subscriptionTier: v.string(),
+        subscriptionStatus: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const profile = await ctx.db
+            .query("profiles")
+            .withIndex("by_stripe_customer", (q) =>
+                q.eq("stripeCustomerId", args.customerId)
+            )
+            .first();
+
+        if (profile) {
+            await ctx.db.patch(profile._id, {
+                subscriptionTier: args.subscriptionTier,
+                subscriptionStatus: args.subscriptionStatus,
+                stripeSubscriptionId: undefined,
+                updatedAt: Date.now(),
+            });
+        }
+
+        return { success: true };
+    },
+});
