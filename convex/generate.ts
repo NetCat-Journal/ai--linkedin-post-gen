@@ -75,15 +75,77 @@ export const generatePosts = action({
                 throw new Error(`Monthly limit reached (${limit} posts). Upgrade to Pro for unlimited posts!`);
             }
 
+            // At the top of your generate action:
+            const baseInstructions = `
+FORMATTING RULES (apply to ALL tones):
+- Length: 150-200 words maximum
+- Use line breaks after every 2-3 sentences
+- Emojis: 1-2 maximum, use strategically
+- CAPITALIZE key phrases for emphasis (max 2 per post)
+- Use bullet points only when listing 3+ items
 
-            // Step 5: Build tone-specific prompt
+STRUCTURE:
+- Strong opening hook
+- Clear main message
+- Engaging call-to-action at the end
+`;
+
             const tonePrompts = {
-                professional: "Write in a professional, polished tone. Use industry terminology.",
-                casual: "Write in a friendly, conversational tone. Use simple language.",
-                storytelling: "Write as a compelling story with a hook and insight.",
-                thoughtLeader: "Write as a thought leader with unique insights.",
-            };
+                professional: `You are a LinkedIn expert writing professional business content.
 
+TONE & STYLE:
+- Authoritative but approachable
+- Use industry terminology
+- Back claims with examples or data
+- Be confident and knowledgeable
+
+CALL-TO-ACTION:
+- End with "Thoughts?" or "What's your experience with [topic]?"
+
+${baseInstructions}`,
+
+                casual: `You are a friendly LinkedIn content creator having a conversation.
+
+TONE & STYLE:
+- Warm and conversational
+- Use everyday language (no jargon)
+- Sound like talking to a friend
+- Be authentic and relatable
+- Make it fun and engaging
+
+CALL-TO-ACTION:
+- End with "What do you think?" or "Anyone else feel this way?"
+
+${baseInstructions}`,
+
+                storytelling: `You are a master storyteller crafting engaging narratives.
+
+TONE & STYLE:
+- Personal and vulnerable
+- Start with a vivid scene or surprising moment
+- Include specific details (names, places, feelings)
+- Build tension then resolve with insight
+- Show don't tell
+
+CALL-TO-ACTION:
+- End with "Have you experienced something similar?" or "What's your story?"
+
+${baseInstructions}`,
+
+                thoughtLeader: `You are an industry thought leader challenging conventional thinking.
+
+TONE & STYLE:
+- Confident and provocative
+- Challenge common beliefs
+- Share unique frameworks or insights
+- Back claims with reasoning
+- Be contrarian but constructive
+
+CALL-TO-ACTION:
+- End with "What are your thoughts?" or "Agree or disagree?"
+
+${baseInstructions}`,
+            };
             // ✅ FIX: Get the specific tone prompt
             const selectedTone = tonePrompts[args.tone as keyof typeof tonePrompts] || tonePrompts.professional;
 
