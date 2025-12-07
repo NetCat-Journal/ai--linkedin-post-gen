@@ -3,6 +3,8 @@ import { useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
+
 
 function Posts() {
     const testGenerate = useAction(api.generate.testGenerate);
@@ -13,12 +15,14 @@ function Posts() {
     const [error, setError] = useState<string>("");
     const [selectedTone, setSelectedTone] = useState<string>("");
     const [copied, setCopied] = useState<string>("");
+    const [emoji, setEmoji] = useState<string>("");
+
 
     const tones = [
-        { value: 'professional', label: 'Professional' },
-        { value: 'casual', label: 'Casual' },
-        { value: 'storytelling', label: 'Storytelling' },
-        { value: 'thoughtLeader', label: 'Thought Leader' },
+        { value: 'professional', label: 'Professional', emoji: "💼", color: "bg-blue-100 text-blue-800" },
+        { value: 'casual', label: 'Casual', emoji: "😎", color: "bg-green-100 text-green-800" },
+        { value: 'storytelling', label: 'Storytelling', emoji: '📖', color: "bg-purple-100 text-purple-800" },
+        { value: 'thoughtLeader', label: 'Thought Leader', emoji: '🧠', color: "bg-orange-100 text-orange-800" },
     ];
 
 
@@ -28,6 +32,9 @@ function Posts() {
 
     const toneHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedTone(e.target.value);
+        const foundEmoji = tones.find(tone => tone.value === e.target.value);
+        setEmoji(foundEmoji ? foundEmoji.emoji : "");
+        console.log("emoji", emoji);
     }
 
     const apiHandler = async () => {
@@ -39,9 +46,12 @@ function Posts() {
             console.log("API response:", res);
             if (res.success) {
                 setResult(res.posts);
+                toast.success("✅ Posts generated successfully!");
                 console.log("Tokens used:", res.tokensUsed);
+                console.log("tone", res);
             } else {
                 setError(`Error: ${res.error}`);
+                toast.error(`❌ Error generating posts: ${res.error}`);
             }
 
         }
@@ -53,12 +63,15 @@ function Posts() {
         }
     }
 
-    const clipboardHandler = async (e: React.MouseEvent<SVGSVGElement, MouseEvent>, post: string) => {
+    const clipboardHandler = async (post: string) => {
         try {
             await navigator.clipboard.writeText(post);
             console.log("Copied to clipboard:", post);
             setCopied(post);
             setTimeout(() => setCopied(''), 2000);
+            toast.success("📋 Copied to clipboard!", {
+                duration: 2000,
+            });
         }
         catch (err) {
             console.log("Clipboard copy error:", err);
@@ -69,13 +82,14 @@ function Posts() {
         <>
             <div className="p-4 flex flex-row justify-between items-center">
                 <input onChange={handlePrompt} type="text" placeholder="Enter your idea ..." className="rounded-sm border border-gray-200 p-2 mr-2 flex-1" />
-                <button onClick={apiHandler} disabled={loading} className="rounded-sm px-4 py-2 bg-[#0A66C2] border-2 border-transparent text-white hover:bg-[#0a66c2ed]">Create Posts</button></div>
-            <div className="p-4">
-                <div className="flex flex-row justify-between rounded-sm border border-gray-200 p-4">
+                <button onClick={apiHandler} disabled={loading || selectedTone === '' || prompt === ""} className="rounded-sm px-4 py-2 bg-[#0A66C2] border-2 border-transparent text-white hover:bg-[#0a66c2ed] disabled:bg-gray-400">Create Posts</button></div>
+            <div className="p-4 mb-8">
+                <div className="flex flex-row justify-between rounded-sm border border-gray-200 p-4 shadow-xs backdrop-blur-sm">
                     {tones.map((tone) => (
-                        <div key={tone.value} className="flex items-center justify-between">
+                        <div key={tone.value} className="flex items-center justify-between ">
                             <input type="radio" name="tone" value={tone.value} onChange={toneHandler} />
-                            <span className="ml-4">{tone.label}</span>
+                            <span className="ml-4 text-lg">{tone.emoji}</span>
+                            <span className={`ml-2 ${selectedTone === tone.value ? `${tone.color} shadow-sm` : '<span className="text-lg">{tone.emoji}</span>'}`}>{tone.label}</span>
                         </div>
                     ))
                     }
@@ -86,12 +100,13 @@ function Posts() {
                 <div className="p-4">
                     <div className="flex justify-center items-center">
                         {loading && <Spinner className="w-20 h-20 text-[#0A66C2]" />}
-                        <div className="grid grid-rows-3 gap-4 md:grid md:grid-cols-3 ">
+                        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-3 auto-rows-fr">
                             {result.map((post, index) => (
-                                <div key={index} className="rounded-sm border border-gray-200 p-8 flex flex-col justify-between">
-                                    <p>{post}</p>
-                                    <div>
-                                        {copied && post === copied ? <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-clipboard-check-icon lucide-clipboard-check cursor-pointer text-[#0A66C2]"><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="m9 14 2 2 4-4" /></svg> : <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-clipboard-list-icon lucide-clipboard-list cursor-pointer text-[#0A66C2]" onClick={(e) => clipboardHandler(e, post)}><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="M12 11h4" /><path d="M12 16h4" /><path d="M8 11h.01" /><path d="M8 16h.01" /></svg>}
+                                <div key={index} className="rounded-sm border border-gray-200 p-8 flex flex-col justify-between items-start shadow-sm backdrop-blur-sm transform hover:scale-105 transition duration-200">
+                                    <div className="mb-4 h-8">{emoji}</div>
+                                    <p className="flex-1 mb-2">{post}</p>
+                                    <div onClick={() => clipboardHandler(post)} className="flex justify-center items-center rounded-sm bg-gray-200 w-8 h-8 mb-0  cursor-pointer hover:scale-110 active:scale-95 transition-transform">
+                                        {copied && post === copied ? "✅" : "📋"}
                                     </div>
                                 </div>
                             ))}

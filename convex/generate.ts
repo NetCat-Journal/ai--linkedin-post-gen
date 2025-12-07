@@ -78,7 +78,7 @@ export const generatePosts = action({
             // At the top of your generate action:
             const baseInstructions = `
 FORMATTING RULES (apply to ALL tones):
-- Length: 150-200 words maximum
+- Length: 150 words maximum
 - Use line breaks after every 2-3 sentences
 - Emojis: 1-2 maximum, use strategically
 - CAPITALIZE key phrases for emphasis (max 2 per post)

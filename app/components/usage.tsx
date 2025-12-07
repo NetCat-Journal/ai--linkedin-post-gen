@@ -64,8 +64,8 @@ function Usage() {
     };
 
     return (
-        <div className="flex flex-col justify-center items-center mt-8  w-full p-4">
-            <div className="w-full p-8 space-y-4 border border-gray-200 rounded-sm backdrop-blur-2xl shadow-gray-50 flex flex-row justify-between">
+        <div className="flex flex-col justify-center items-center mt-8  w-full p-4 ">
+            <div className="w-full p-8 space-y-4 border border-gray-200 rounded-sm shadow-xs backdrop-blur-sm flex flex-row justify-between">
                 <div>
                     <div>
                         <h2>{profile?.name}</h2>
@@ -79,7 +79,7 @@ function Usage() {
                     </div>
                     <div className="flex flex-row space-x-7">
                         <h2>Remaining: {remaining === Infinity ? 'Unlimited' : `${remaining} out of &{limit}`} </h2>
-                        <h2>{upgrading ? 'Loading...' : `⭐ You are a ${profile.subscriptionTier} member`}</h2>
+                        <h2>{upgrading ? 'Loading...' : `⭐ You are a ${profile.subscriptionTier.toUpperCase()} member`}</h2>
                     </div></div>
                 <div>
                     <div>
