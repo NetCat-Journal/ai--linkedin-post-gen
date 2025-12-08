@@ -8,7 +8,7 @@ import Skeleton from "./skeleton";
 
 
 function Posts() {
-    const testGenerate = useAction(api.generate.testGenerate);
+
     const generatePosts = useAction(api.generate.generatePosts);
     const [result, setResult] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
