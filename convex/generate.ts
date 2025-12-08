@@ -7,48 +7,6 @@ import { api } from "./_generated/api";
 //  apiKey: process.env.OPENAI_API_KEY,
 //});
 
-export const testGenerate = internalAction({
-    args: { prompt: v.string() },
-    handler: async (ctx, args) => {
-        try {
-            const openai = new OpenAI({
-                apiKey: process.env.OPENAI_API_KEY,
-            });
-            const complete = await openai.chat.completions.create({
-                model: "gpt-4o",
-                messages: [
-                    {
-                        role: "system",
-                        content: "You are a helpful assistant that generates LinkedIn posts.",
-                    },
-                    {
-                        role: "user",
-                        content: args.prompt,
-                    },
-                ],
-                temperature: 0.7,
-                max_tokens: 500,
-            })
-            const res = complete.choices[0].message?.content;
-            return {
-                sucess: true,
-                content: res,
-                tokensUsed: complete.usage?.total_tokens || 0,
-                model: complete.model
-            };
-        }
-        catch (error) {
-            console.error("Error generating content:", error);
-            return {
-                sucess: false,
-                content: "Error generating content",
-                tokensUsed: 0,
-                model: ""
-            };
-        }
-    },
-});
-
 export const generatePosts = action({
     args: { idea: v.string(), tone: v.string() },
     handler: async (ctx, args) => {
