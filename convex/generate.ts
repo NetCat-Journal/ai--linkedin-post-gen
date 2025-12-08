@@ -1,16 +1,19 @@
-import { action } from "./_generated/server";
+import { action, internalAction } from "./_generated/server";
 import { v } from "convex/values";
 import OpenAI from "openai";
 import { api } from "./_generated/api";
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+//const openai = new OpenAI({
+//  apiKey: process.env.OPENAI_API_KEY,
+//});
 
-export const testGenerate = action({
+export const testGenerate = internalAction({
     args: { prompt: v.string() },
     handler: async (ctx, args) => {
         try {
+            const openai = new OpenAI({
+                apiKey: process.env.OPENAI_API_KEY,
+            });
             const complete = await openai.chat.completions.create({
                 model: "gpt-4o",
                 messages: [
@@ -49,6 +52,9 @@ export const testGenerate = action({
 export const generatePosts = action({
     args: { idea: v.string(), tone: v.string() },
     handler: async (ctx, args) => {
+        const openai = new OpenAI({
+            apiKey: process.env.OPENAI_API_KEY,
+        });
         try {
             // Step 1: Check authentication
             const identity = await ctx.auth.getUserIdentity();
@@ -146,10 +152,10 @@ CALL-TO-ACTION:
 
 ${baseInstructions}`,
             };
-            // ✅ FIX: Get the specific tone prompt
+
             const selectedTone = tonePrompts[args.tone as keyof typeof tonePrompts] || tonePrompts.professional;
 
-            // ✅ FIX: Insert the tone into system prompt
+
             const systemPrompt = `You are a LinkedIn content expert. ${selectedTone}
 
 Create 3 different variations of a LinkedIn post based on the user's idea.
