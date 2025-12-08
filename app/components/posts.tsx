@@ -2,8 +2,9 @@
 import { useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useState } from "react";
-import { Spinner } from "@/components/ui/spinner";
+//import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
+import Skeleton from "./skeleton";
 
 
 function Posts() {
@@ -95,14 +96,41 @@ function Posts() {
                     }
                 </div>
             </div>
-
-            {result && (
+            {loading && (
                 <div className="p-4">
                     <div className="flex justify-center items-center">
-                        {loading && <Spinner className="w-20 h-20 text-[#0A66C2]" />}
-                        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-3 auto-rows-fr">
+                        <Skeleton />
+                    </div>
+                </div>
+            )}
+            {!loading && result.length === 0 && (
+                <div className="p-4 flex justify-center items-center min-h-[400px]">
+                    <div className="text-center max-w-md">
+                        <div className="text-6xl mb-4">✨</div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                            Ready to Create Amazing Posts?
+                        </h3>
+                        <p className="text-gray-600 mb-6">
+                            Enter your idea, select a tone, and click "Create Posts"!
+                        </p>
+                        <div className="flex items-center justify-center gap-3 text-2xl">
+                            <span>💼</span>
+                            <span>😎</span>
+                            <span>📖</span>
+                            <span>🧠</span>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {!loading && result.length > 0 && (
+                <div className="p-4">
+                    <div className="flex justify-center items-center">
+                        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-3 auto-rows-fr ">
                             {result.map((post, index) => (
-                                <div key={index} className="rounded-sm border border-gray-200 p-8 flex flex-col justify-between items-start shadow-sm backdrop-blur-sm transform hover:scale-105 transition duration-200">
+                                <div key={index} style={{
+                                    animation: "fadeIn 0.6s ease-out forwards",
+                                    animationDelay: `${index * 0.15}s`
+                                }} className="rounded-sm border border-gray-200 p-8 flex flex-col justify-between items-start shadow-sm backdrop-blur-sm transform hover:scale-105 transition duration-200">
                                     <div className="mb-4 h-8">{emoji}</div>
                                     <p className="flex-1 mb-2">{post}</p>
                                     <div onClick={() => clipboardHandler(post)} className="flex justify-center items-center rounded-sm bg-gray-200 w-8 h-8 mb-0  cursor-pointer hover:scale-110 active:scale-95 transition-transform">
