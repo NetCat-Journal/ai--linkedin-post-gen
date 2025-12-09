@@ -85,9 +85,9 @@ function Posts() {
                 <input onChange={handlePrompt} type="text" placeholder="Enter your idea ..." className="rounded-sm border border-gray-200 p-2 mr-2 flex-1" />
                 <button onClick={apiHandler} disabled={loading || selectedTone === '' || prompt === ""} className="rounded-sm px-4 py-2 bg-[#0A66C2] border-2 border-transparent text-white hover:bg-[#0a66c2ed] disabled:bg-gray-400">Create Posts</button></div>
             <div className="p-4 mb-8">
-                <div className="flex flex-row justify-between rounded-sm border border-gray-200 p-4 shadow-xs backdrop-blur-sm">
+                <div className="grid grid-cols-2 gap-8 md:grid-cols-4 rounded-sm border border-gray-200 p-4 shadow-xs backdrop-blur-sm">
                     {tones.map((tone) => (
-                        <div key={tone.value} className="flex items-center justify-between ">
+                        <div key={tone.value} className="text-left md:text-center">
                             <input type="radio" name="tone" value={tone.value} onChange={toneHandler} />
                             <span className="ml-4 text-lg">{tone.emoji}</span>
                             <span className={`ml-2 ${selectedTone === tone.value ? `${tone.color} shadow-sm` : '<span className="text-lg">{tone.emoji}</span>'}`}>{tone.label}</span>
@@ -125,7 +125,7 @@ function Posts() {
             {!loading && result.length > 0 && (
                 <div className="p-4">
                     <div className="flex justify-center items-center">
-                        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-3 auto-rows-fr ">
+                        <div className="grid gap-8 sm:grid-cols-1 lg:grid-cols-3 auto-rows-fr ">
                             {result.map((post, index) => (
                                 <div key={index} style={{
                                     animation: "fadeIn 0.6s ease-out forwards",
