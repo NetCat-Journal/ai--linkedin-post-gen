@@ -7,11 +7,11 @@ import { api } from "./_generated/api";
 //  apiKey: process.env.OPENAI_API_KEY,
 //});
 
-export const generatePosts = action({
+export const generatePosts = internalAction({
     args: { idea: v.string(), tone: v.string() },
     handler: async (ctx, args) => {
         const openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY,
+            apiKey: process.env.OPENAI_API_KEY
         });
         try {
             // Step 1: Check authentication

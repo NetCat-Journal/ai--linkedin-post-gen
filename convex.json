@@ -1,0 +1,11 @@
+{
+    "functions": "./convex",
+    "cors": {
+        "origin": "*"
+    },
+    "env": {
+        "OPENAI_API_KEY": {
+            "type": "secret"
+        }
+    }
+}
