@@ -78,7 +78,7 @@ function Usage() {
 
                     </div>
                     <div className="flex flex-row space-x-7">
-                        <h2>Remaining: {remaining === Infinity ? 'Unlimited' : `${remaining} out of &{limit}`} </h2>
+                        <h2>Remaining: {remaining === Infinity ? 'Unlimited' : `${remaining} out of ${limit}`} </h2>
                         <h2>{upgrading ? 'Loading...' : `⭐ You are a ${profile.subscriptionTier.toUpperCase()} member`}</h2>
                     </div></div>
                 <div>
